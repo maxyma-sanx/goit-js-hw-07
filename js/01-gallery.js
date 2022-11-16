@@ -29,19 +29,23 @@ function onGalleryClick(evt) {
   }
 
   const instance = basicLightbox.create(
-    `<img src="${evt.target.dataset.source}">`
+    `<img src="${evt.target.dataset.source}">`,
+    {
+      onShow: () => {
+        gallery.addEventListener("keydown", closeModalOnEscapeClick);
+      },
+      onClose: () =>
+        gallery.removeEventListener("keydown", closeModalOnEscapeClick),
+    }
   );
 
-  instance.show();
-  closeModalOnEscapeClick(instance);
-}
-
-function closeModalOnEscapeClick(instance) {
-  window.addEventListener("keydown", (evt) => {
+  function closeModalOnEscapeClick(evt) {
     if (evt.key === "Escape") {
       instance.close();
     }
-  });
+  }
+
+  instance.show();
 }
 
 gallery.insertAdjacentHTML("beforeend", createGalleryMarkup(galleryItems));
